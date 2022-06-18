@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:last/scan.dart';
+import 'package:last/screen/forgotpass.dart';
 import 'package:last/screen/home.dart';
 import 'package:last/screen/profile.dart';
 import 'package:last/screen/waiting.dart';
+import 'package:last/screen/forgotpass.dart';
 
 class Loginsceen extends StatefulWidget {
   @override
@@ -127,7 +129,32 @@ class _LoginsceenState extends State<Loginsceen> {
                         }
                       },
                     ),
-                  )
+                  ),
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: ((context) {
+                              return ForgotPasswordPage();
+                            })));
+                          },
+                          child: Text(
+                            'ลืมรหัสผ่าน?',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
                 ],
               ),
             ),

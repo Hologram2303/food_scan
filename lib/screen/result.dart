@@ -27,6 +27,43 @@ class _ResultsceenState extends State<Resultsceen> {
   Profile profile = Profile(email: '', password: '', food: '');
 
   @override
+  void initState() {
+    print("hello");
+    super.initState();
+    Future.delayed(Duration(milliseconds: 500), () {
+      _showMyDialog();
+    });
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('AlertDialog Title'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('This is a demo alert dialog.'),
+                Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     List ingredient = widget.value["ingredient"] as List;
     List value = widget.value["value"] as List;

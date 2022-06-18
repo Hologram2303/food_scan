@@ -146,22 +146,27 @@ class _QRViewExampleState extends State<QRViewExample> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) async {
-      print(scanData.code);
-      await FirebaseFirestore.instance
-          .collection("mylast")
-          .doc(scanData.code)
-          .get()
-          .then((value) {
-        if (value != null) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return Resultsceen(
-              value: value,
-            );
-          }));
-        }
-      });
-    });
+    controller.scannedDataStream.listen(
+      (scanData) async {
+        print(scanData.code);
+      },
+      onDone: () async {
+        await FirebaseFirestore.instance
+            .collection("mylast")
+            .doc(scanData.code)
+            .get()
+            .then((value) {
+          if (value.exists) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return Resultsceen(
+                value: value,
+              );
+            }));
+          }
+        });
+      },
+    );
   }
 
   @override

@@ -51,7 +51,10 @@ class _LosescreenState extends State<Losescreen> {
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Color.fromARGB(255, 230, 9, 9))),
-                        Text(value[i], style: TextStyle(fontSize: 20)),
+                        Text(value[i]["title"], style: TextStyle(fontSize: 20)),
+                        Divider(),
+                        Text(value[i]["description"],
+                            style: TextStyle(fontSize: 20)),
                         Divider(),
                       ],
                     )
