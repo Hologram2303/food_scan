@@ -4,9 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:last/scan.dart';
+import 'package:last/screen/scan.dart';
 import 'package:last/screen/home.dart';
-import 'package:last/screen/profile.dart';
+import 'package:last/models/profile.dart';
 
 class Losescreen extends StatefulWidget {
   final DocumentSnapshot value;

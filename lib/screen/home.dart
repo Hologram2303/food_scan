@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:last/screen/login.dart';
 import 'package:last/screen/regis.dart';
 
-class Homescreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -5,23 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:last/screen/result.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class QRViewExample extends StatefulWidget {
-  const QRViewExample({
+class Scan extends StatefulWidget {
+  const Scan({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
+  State<StatefulWidget> createState() => _ScanState();
 }
 
-class _QRViewExampleState extends State<QRViewExample> {
+class _ScanState extends State<Scan> {
   Barcode? result;
-  DocumentSnapshot? name;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
+  StreamSubscription? _steam;
+
   @override
   void reassemble() {
     super.reassemble();
@@ -36,7 +36,10 @@ class _QRViewExampleState extends State<QRViewExample> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
+          Expanded(
+            flex: 4,
+            child: _buildQrView(context),
+          ),
           Expanded(
             flex: 1,
             child: FittedBox(
@@ -51,36 +54,38 @@ class _QRViewExampleState extends State<QRViewExample> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.all(8),
-                        child: RaisedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await controller?.toggleFlash();
+                            setState(() {});
+                          },
+                          child: FutureBuilder(
+                            future: controller?.getFlashStatus(),
+                            builder: (context, snapshot) {
+                              return Text('Flash: ${snapshot.data}');
                             },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
+                          ),
+                        ),
                       ),
                       Container(
                         margin: EdgeInsets.all(8),
-                        child: RaisedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await controller?.flipCamera();
+                            setState(() {});
+                          },
+                          child: FutureBuilder(
+                            future: controller?.getCameraInfo(),
+                            builder: (context, snapshot) {
+                              if (snapshot.data != null) {
+                                return Text(
+                                    'Camera facing ${describeEnum(snapshot.data!)}');
+                              } else {
+                                return Text('loading');
+                              }
                             },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return Text('loading');
-                                }
-                              },
-                            )),
+                          ),
+                        ),
                       )
                     ],
                   ),
@@ -90,20 +95,30 @@ class _QRViewExampleState extends State<QRViewExample> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.all(8),
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           onPressed: () async {
                             await controller?.pauseCamera();
                           },
-                          child: Text('pause', style: TextStyle(fontSize: 20)),
+                          child: Text(
+                            'pause',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.all(8),
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           onPressed: () async {
                             await controller?.resumeCamera();
                           },
-                          child: Text('resume', style: TextStyle(fontSize: 20)),
+                          child: Text(
+                            'resume',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -146,25 +161,17 @@ class _QRViewExampleState extends State<QRViewExample> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen(
+    _steam = controller.scannedDataStream.listen(
       (scanData) async {
         print(scanData.code);
+        setState(() {
+          result = scanData;
+
+          _steam?.cancel();
+        });
       },
       onDone: () async {
-        await FirebaseFirestore.instance
-            .collection("mylast")
-            .doc(scanData.code)
-            .get()
-            .then((value) {
-          if (value.exists) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) {
-              return Resultsceen(
-                value: value,
-              );
-            }));
-          }
-        });
+        Navigator.pop(context, result!.code);
       },
     );
   }
@@ -172,6 +179,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   @override
   void dispose() {
     controller?.dispose();
+    _steam?.cancel();
     super.dispose();
   }
 }

@@ -22,22 +22,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: _emailController.text.trim());
       showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(
-                  'เราได้ส่งลิงค์เปลี่ยนรหัสผ่านไปหาคุณแล้ว!!! โปรดเช็คกล่องข้อความในอีเมล'),
-            );
-          });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(
+              'เราได้ส่งลิงค์เปลี่ยนรหัสผ่านไปหาคุณแล้ว!!! โปรดเช็คกล่องข้อความในอีเมล',
+            ),
+          );
+        },
+      );
     } on FirebaseAuthException catch (e) {
       print(e);
       showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(e.message.toString()),
-            );
-          });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(e.message.toString()),
+          );
+        },
+      );
     }
   }
 

@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:last/screen/home.dart';
-import 'package:last/screen/profile.dart';
+import 'package:last/models/profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 
-import 'profile.dart';
+import '../models/profile.dart';
 
 class Registersceen extends StatefulWidget {
   @override
@@ -87,7 +87,7 @@ class _RegistersceenState extends State<Registersceen> {
                                     });
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return Homescreen();
+                              return HomeScreen();
                             }));
                           } on FirebaseAuthException catch (e) {
                             print(e.code);

@@ -4,12 +4,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:last/scan.dart';
-import 'package:last/screen/forgotpass.dart';
+import 'package:last/screen/scan.dart';
+import 'package:last/screen/forgot_pass.dart';
 import 'package:last/screen/home.dart';
-import 'package:last/screen/profile.dart';
+import 'package:last/models/profile.dart';
 import 'package:last/screen/waiting.dart';
-import 'package:last/screen/forgotpass.dart';
+import 'package:last/screen/forgot_pass.dart';
 
 class Loginsceen extends StatefulWidget {
   @override
@@ -68,7 +68,12 @@ class _LoginsceenState extends State<Loginsceen> {
                   SizedBox(
                     height: 15,
                   ),
-                  Text("รหัสผ่าน", style: TextStyle(fontSize: 20)),
+                  Text(
+                    "รหัสผ่าน",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
                   TextFormField(
                     obscureText: true,
                     validator: RequiredValidator(
@@ -80,8 +85,12 @@ class _LoginsceenState extends State<Loginsceen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      child:
-                          Text("ลงชื่อเข้าใช้", style: TextStyle(fontSize: 30)),
+                      child: Text(
+                        "ลงชื่อเข้าใช้",
+                        style: TextStyle(
+                          fontSize: 30,
+                        ),
+                      ),
                       onPressed: () async {
                         if (formkey.currentState!.validate()) {
                           formkey.currentState!.save();
